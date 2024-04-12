@@ -52,24 +52,24 @@ CONSTRAINT fkLivroSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
 );
 
 INSERT INTO livro VALUES 
-(DEFAULT, 'Carta de Pero Vaz de Caminha', 'Manuscrito','1500-05-01', 'Boa',5),
+(DEFAULT, 'Carta de Pero Vaz de Caminha', 'Manuscrito','1500-05-01', 'Boa',1),
 (DEFAULT, 'Os Lusíadas','Poesia','1572-03-12','Média',2),
-(DEFAULT, 'Constituição Imperial Brasileira ','Legislação','1824-03-25','Ruim',1),
-(DEFAULT, 'Lei Áurea','Legislação','1888-05-13','Boa',1),
+(DEFAULT, 'Constituição Imperial Brasileira ','Legislação','1824-03-25','Ruim',3),
+(DEFAULT, 'Lei Áurea','Legislação','1888-05-13','Boa',4),
 (DEFAULT, 'Livro de Kells', 'Manuscrito','1615-10-13', 'Média',5),
 (DEFAULT, 'Magna Carta','Manuscrito','1450-07-01','Ruim',6),
-(DEFAULT, 'Diário de Anne Frank ','Manuscrito','1770-02-14','Boa',6),
-(DEFAULT, 'Poemas de Safo','Poesia','1102-09-21','Média',6),
-(DEFAULT, 'Manuscritos da Guerra de Canudos', 'Manuscrito','1289-03-19', 'Ruim',5),
-(DEFAULT, 'Manifesto da Comuna de Canudos','Manuscrito','1347-11-24','Boa',5),
-(DEFAULT, 'A Moreninha ','Manuscrito','1899-03-30','Média',5),
-(DEFAULT, 'Os Sertões ','Manuscrito','1205-03-09','Ruim',5),
-(DEFAULT, 'Diário de Anchieta', 'Manuscrito','1752-05-20', 'Boa',5),
-(DEFAULT, 'Proclamação da República','Legislação','1481-12-12','Média',1),
+(DEFAULT, 'Diário de Anne Frank ','Manuscrito','1770-02-14','Boa',7),
+(DEFAULT, 'Poemas de Safo','Poesia','1102-09-21','Média',8),
+(DEFAULT, 'Manuscritos da Guerra de Canudos', 'Manuscrito','1289-03-19', 'Ruim',9),
+(DEFAULT, 'Manifesto da Comuna de Canudos','Manuscrito','1347-11-24','Boa',10),
+(DEFAULT, 'A Moreninha ','Manuscrito','1899-03-30','Média',11),
+(DEFAULT, 'Os Sertões ','Manuscrito','1205-03-09','Ruim',12),
+(DEFAULT, 'Diário de Anchieta', 'Manuscrito','1752-05-20', 'Boa',1),
+(DEFAULT, 'Proclamação da República','Legislação','1481-12-12','Média',2),
 (DEFAULT, 'Diário de Hans Staden','Manuscrito','1799-02-25','Ruim',3),
 (DEFAULT, 'Auto da Pregação do Frade Bartolomeu de Gusmão','Poesia','1544-10-23','Boa',4),
-(DEFAULT, 'Inuíto','Poesia','1745-07-11','Média',2),
-(DEFAULT, 'Declaração da Independência dos Estados Unidos','Legislação','1890-08-07','Ruim',3);
+(DEFAULT, 'Inuíto','Poesia','1745-07-11','Média',5),
+(DEFAULT, 'Declaração da Independência dos Estados Unidos','Legislação','1890-08-07','Ruim',6);
 
 SELECT * FROM livro;
 
@@ -92,23 +92,29 @@ CONSTRAINT fkRegistroSensor FOREIGN KEY (fkSensor) REFERENCES sensor(idSensor)
 
 INSERT INTO registro VALUES
 (DEFAULT, '12', '47',1),
-(DEFAULT, '13', '45',2),
-(DEFAULT, '15', '20',3),
-(DEFAULT, '20', '60',4),
-(DEFAULT, '20', '61',5),
-(DEFAULT, '20', '62',6),
-(DEFAULT, '23', '59',1),
-(DEFAULT, '25', '58',2),
-(DEFAULT, '20', '60',3),
-(DEFAULT, '28', '50',4),
-(DEFAULT, '32', '80',5),
+(DEFAULT, '13', '45',1),
+(DEFAULT, '15', '20',2),
+(DEFAULT, '20', '60',2),
+(DEFAULT, '20', '61',3),
+(DEFAULT, '20', '62',3),
+(DEFAULT, '23', '59',4),
+(DEFAULT, '25', '58',4),
+(DEFAULT, '20', '60',5),
+(DEFAULT, '28', '50',5),
+(DEFAULT, '32', '80',6),
 (DEFAULT, '28', '77',6),
-(DEFAULT, '18', '70',1),
-(DEFAULT, '15', '69',2),
-(DEFAULT, '13', '60',3),
-(DEFAULT, '12', '65',4),
-(DEFAULT, '11', '69',5),
-(DEFAULT, '10', '67',6);
+(DEFAULT, '10', '45',7),
+(DEFAULT, '13', '42',7),
+(DEFAULT, '30', '20',8),
+(DEFAULT, '30', '60',8),
+(DEFAULT, '16', '63',9),
+(DEFAULT, '11', '52',9),
+(DEFAULT, '23', '60',10),
+(DEFAULT, '21', '80',10),
+(DEFAULT, '10', '60',11),
+(DEFAULT, '28', '58',11),
+(DEFAULT, '32', '70',12),
+(DEFAULT, '20', '57',12);
 
 SELECT * FROM registro;
 
@@ -153,16 +159,17 @@ nome VARCHAR(80) NOT NULL,
 descricao TEXT NOT NULL,
 fkEmpresa INT NOT NULL,
 fkMetrica INT NOT NULL,
-CONSTRAINT fkSalaEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
+CONSTRAINT fkSalaEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
+CONSTRAINT fkSalaMetrica FOREIGN KEY (fkMetrica) REFERENCES metrica(idMetrica)
 );
 
 INSERT INTO sala VALUES 
-(DEFAULT, 'Leis Brasileiras', 'Sala onde se armazena documentos de leis brasileiras',1),
-(DEFAULT,'Poemas Brasileiros','Sala onde se armazena importantes poemas brasileiros',1),
-(DEFAULT, 'Estados Unidos', 'Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías dos Estados Unidos',2),
-(DEFAULT,'Poemas internacionais','Sala onde se armazena importantes poemas internacionais',2),
-(DEFAULT,'Acontecimentos Brasileiros','Sala onde se armazena documentos narrando importantes acontecimentos do Brasil',3),
-(DEFAULT,'Inglaterra','Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías da Inglaterra',3);
+(DEFAULT, 'Leis Brasileiras', 'Sala onde se armazena documentos de leis brasileiras',1,1),
+(DEFAULT,'Poemas Brasileiros','Sala onde se armazena importantes poemas brasileiros',1,1),
+(DEFAULT, 'Estados Unidos', 'Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías dos Estados Unidos',2,1),
+(DEFAULT,'Poemas internacionais','Sala onde se armazena importantes poemas internacionais',2,1),
+(DEFAULT,'Acontecimentos Brasileiros','Sala onde se armazena documentos narrando importantes acontecimentos do Brasil',3,1),
+(DEFAULT,'Inglaterra','Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías da Inglaterra',3,1);
 
 SELECT * FROM sala;
 
@@ -171,18 +178,22 @@ SELECT * FROM sala;
 CREATE TABLE sensor (
 idSensor INT PRIMARY KEY AUTO_INCREMENT,
 fkSala INT NOT NULL,
-fkMetrica INT NOT NULL,
-CONSTRAINT fkSensorSala FOREIGN KEY (fkSala) REFERENCES sala(idSala),
-CONSTRAINT fkSensorMetrica FOREIGN KEY (fkMetrica) REFERENCES metrica(idMetrica)
+CONSTRAINT fkSensorSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
 );
 
 INSERT INTO sensor VALUES
-(DEFAULT,1,1),
-(DEFAULT,2,1),
-(DEFAULT,3,1),
-(DEFAULT,4,1),
-(DEFAULT,5,1),
-(DEFAULT,6,1);
+(DEFAULT,1),
+(DEFAULT,1),
+(DEFAULT,2),
+(DEFAULT,2),
+(DEFAULT,3),
+(DEFAULT,3),
+(DEFAULT,4),
+(DEFAULT,4),
+(DEFAULT,5),
+(DEFAULT,5),
+(DEFAULT,6),
+(DEFAULT,6);
 
 SELECT * FROM sensor;
 
@@ -236,4 +247,5 @@ DROP DATABASE hdp;
 
 -- SELECT nome AS 'Nome', descricao AS 'Descrição' FROM Sala WHERE nome = 'Poemas Brasileiros';
 
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------------------------
