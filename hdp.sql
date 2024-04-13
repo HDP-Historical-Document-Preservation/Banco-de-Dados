@@ -14,62 +14,120 @@
 CREATE DATABASE hdp;
 USE hdp;
 
+-- Tabela Empresa ---------------------------------------------------------------------------------------------------------
+
+CREATE TABLE empresa(
+idEmpresa INT PRIMARY KEY AUTO_INCREMENT,
+cnpj CHAR(14) NOT NULL UNIQUE,
+nome VARCHAR(70) NOT NULL,
+responsavel VARCHAR(50) NOT NULL,
+cep CHAR(8) NOT NULL,
+numero VARCHAR(4) NOT NULL
+);
+
+INSERT INTO empresa VALUES
+(DEFAULT,'63025530000104', 'Museu Ipiranga', 'Eduardo', '04207030', '100'),
+(DEFAULT,'10233223000233','Museu da Língua Portuguesa','Fátima','01120010','1130'),
+(DEFAULT,'33663683002917','Museu Nacional','Leandro','20940040','269');
+
+SELECT * FROM empresa;
+
 -- Tabela Funcionario ---------------------------------------------------------------------------------------------------------
 
 CREATE TABLE funcionario (
-idFuncionario INT PRIMARY KEY AUTO_INCREMENT,
+idFuncionario INT AUTO_INCREMENT,
+fkEmpresa INT,
+CONSTRAINT pkFuncionarioEmpresa PRIMARY KEY (idFuncionario, fkEmpresa),
 nome VARCHAR(80) NOT NULL,
 cpf CHAR(11) NOT NULL UNIQUE,
 telefone CHAR(11) NOT NULL,
 email VARCHAR(60) NOT NULL,
 senha VARCHAR(15) NOT NULL,
 dataNascimento DATE NOT NULL,
-fkEmpresa INT NOT NULL,
 CONSTRAINT fkFuncionarioEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
 );
 
 INSERT INTO funcionario VALUES
-(DEFAULT, 'Eduardo da Silva Lima', '41381092268', '11935685087', 'edu.Silva@gmail.com', '042$16756', '1995-10-31',1),
-(DEFAULT, 'Fabíola Santos Monteiro', '14835098714', '11948286002', 'fabiola2456@hotmail.com', '04241829&','1991-12-25',1),
-(DEFAULT, 'Carlos Roberto Figueiredo', '03220101254', '11972785070', 'carlosfigueiredo@yahoo.com', '0424@9094', '1970-03-20',2),
-(DEFAULT, 'Alexandre Alves Reis', '24833018154', '11928282202', 'alexandre@hotmail.com', '022#18292','1993-02-15',2),
-(DEFAULT, 'Danilo Lopez Faria', '00260104251', '11942445040', 'danilo@yahoo.com', '0323&9394', '1984-04-10',3),
-(DEFAULT, 'Ana Bela Costa', '19311694234', '11963732481', 'ana.bela@outlook.com', '04241&678', '1963-04-15',3);
+(DEFAULT, 1, 'Eduardo da Silva Lima', '41381092268', '11935685087', 'edu.Silva@gmail.com', '042$16756', '1995-10-31'),
+(DEFAULT, 1, 'Fabíola Santos Monteiro', '14835098714', '11948286002', 'fabiola2456@hotmail.com', '04241829&','1991-12-25'),
+(DEFAULT, 2, 'Carlos Roberto Figueiredo', '03220101254', '11972785070', 'carlosfigueiredo@yahoo.com', '0424@9094', '1970-03-20'),
+(DEFAULT, 2, 'Alexandre Alves Reis', '24833018154', '11928282202', 'alexandre@hotmail.com', '022#18292','1993-02-15'),
+(DEFAULT, 3, 'Danilo Lopez Faria', '00260104251', '11942445040', 'danilo@yahoo.com', '0323&9394', '1984-04-10'),
+(DEFAULT, 3, 'Ana Bela Costa', '19311694234', '11963732481', 'ana.bela@outlook.com', '04241&678', '1963-04-15');
 
 SELECT * FROM funcionario;
 SELECT nome AS 'Nome do Funcionário', senha AS 'Senha do Funcionário' FROM funcionario;
 
+-- Tabela Métrica ---------------------------------------------------------------------------------------------------------
+
+CREATE TABLE metrica(
+idMetrica INT PRIMARY KEY AUTO_INCREMENT,
+temperaturaMax INT,
+temperaturaMin INT,
+umidadeMax INT,
+umidadeMin INT
+);
+
+INSERT INTO metrica VALUES
+(DEFAULT,25,15,65,55);
+
+SELECT * FROM metrica;
+
+-- Tabela Sala ----------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE sala (
+idSala INT AUTO_INCREMENT,
+fkEmpresa INT,
+fkMetrica INT,
+CONSTRAINT pkSalaEmpresaMetrica PRIMARY KEY (idSala, fkEmpresa, fkMetrica),
+nome VARCHAR(80) NOT NULL,
+descricao TEXT NOT NULL,
+CONSTRAINT fkSalaEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
+CONSTRAINT fkSalaMetrica FOREIGN KEY (fkMetrica) REFERENCES metrica(idMetrica)
+);
+
+INSERT INTO sala VALUES 
+(DEFAULT, 1,1, 'Leis Brasileiras', 'Sala onde se armazena documentos de leis brasileiras'),
+(DEFAULT, 1,1, 'Poemas Brasileiros','Sala onde se armazena importantes poemas brasileiros'),
+(DEFAULT, 2,1, 'Estados Unidos', 'Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías dos Estados Unidos'),
+(DEFAULT, 2,1, 'Poemas internacionais','Sala onde se armazena importantes poemas internacionais'),
+(DEFAULT, 3,1, 'Acontecimentos Brasileiros','Sala onde se armazena documentos narrando importantes acontecimentos do Brasil'),
+(DEFAULT, 3,1, 'Inglaterra','Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías da Inglaterra');
+
+SELECT * FROM sala;
+
 -- Tabela Livro ---------------------------------------------------------------------------------------------------------
 
 CREATE TABLE livro (
-idLivro INT PRIMARY KEY AUTO_INCREMENT,
+idLivro INT AUTO_INCREMENT,
+fkSala INT,
+CONSTRAINT pkLivroSala PRIMARY KEY (idLivro, fkSala),
 nome VARCHAR(70) NOT NULL,
 categoria VARCHAR(70) NOT NULL,
 dataPublicacao DATE,
 integridade VARCHAR(40) NOT NULL,
-fkSala INT NOT NULL,
 CONSTRAINT fkLivroSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
 );
 
 INSERT INTO livro VALUES 
-(DEFAULT, 'Carta de Pero Vaz de Caminha', 'Manuscrito','1500-05-01', 'Boa',1),
-(DEFAULT, 'Os Lusíadas','Poesia','1572-03-12','Média',2),
-(DEFAULT, 'Constituição Imperial Brasileira ','Legislação','1824-03-25','Ruim',3),
-(DEFAULT, 'Lei Áurea','Legislação','1888-05-13','Boa',4),
-(DEFAULT, 'Livro de Kells', 'Manuscrito','1615-10-13', 'Média',5),
-(DEFAULT, 'Magna Carta','Manuscrito','1450-07-01','Ruim',6),
-(DEFAULT, 'Diário de Anne Frank ','Manuscrito','1770-02-14','Boa',7),
-(DEFAULT, 'Poemas de Safo','Poesia','1102-09-21','Média',8),
-(DEFAULT, 'Manuscritos da Guerra de Canudos', 'Manuscrito','1289-03-19', 'Ruim',9),
-(DEFAULT, 'Manifesto da Comuna de Canudos','Manuscrito','1347-11-24','Boa',10),
-(DEFAULT, 'A Moreninha ','Manuscrito','1899-03-30','Média',11),
-(DEFAULT, 'Os Sertões ','Manuscrito','1205-03-09','Ruim',12),
-(DEFAULT, 'Diário de Anchieta', 'Manuscrito','1752-05-20', 'Boa',1),
-(DEFAULT, 'Proclamação da República','Legislação','1481-12-12','Média',2),
-(DEFAULT, 'Diário de Hans Staden','Manuscrito','1799-02-25','Ruim',3),
-(DEFAULT, 'Auto da Pregação do Frade Bartolomeu de Gusmão','Poesia','1544-10-23','Boa',4),
-(DEFAULT, 'Inuíto','Poesia','1745-07-11','Média',5),
-(DEFAULT, 'Declaração da Independência dos Estados Unidos','Legislação','1890-08-07','Ruim',6);
+(DEFAULT, 1, 'Carta de Pero Vaz de Caminha', 'Manuscrito','1500-05-01', 'Boa'),
+(DEFAULT, 2, 'Os Lusíadas','Poesia','1572-03-12','Média'),
+(DEFAULT, 3, 'Constituição Imperial Brasileira ','Legislação','1824-03-25','Ruim'),
+(DEFAULT, 4, 'Lei Áurea','Legislação','1888-05-13','Boa'),
+(DEFAULT, 5, 'Livro de Kells', 'Manuscrito','1615-10-13', 'Média'),
+(DEFAULT, 6, 'Magna Carta','Manuscrito','1450-07-01','Ruim'),
+(DEFAULT, 1, 'Diário de Anne Frank ','Manuscrito','1770-02-14','Boa'),
+(DEFAULT, 2, 'Poemas de Safo','Poesia','1102-09-21','Média'),
+(DEFAULT, 3, 'Manuscritos da Guerra de Canudos', 'Manuscrito','1289-03-19', 'Ruim'),
+(DEFAULT, 4, 'Manifesto da Comuna de Canudos','Manuscrito','1347-11-24','Boa'),
+(DEFAULT, 5, 'A Moreninha ','Manuscrito','1899-03-30','Média'),
+(DEFAULT, 6, 'Os Sertões ','Manuscrito','1205-03-09','Ruim'),
+(DEFAULT, 1, 'Diário de Anchieta', 'Manuscrito','1752-05-20', 'Boa'),
+(DEFAULT, 2, 'Proclamação da República','Legislação','1481-12-12','Média'),
+(DEFAULT, 3, 'Diário de Hans Staden','Manuscrito','1799-02-25','Ruim'),
+(DEFAULT, 4, 'Auto da Pregação do Frade Bartolomeu de Gusmão','Poesia','1544-10-23','Boa'),
+(DEFAULT, 5, 'Inuíto','Poesia','1745-07-11','Média'),
+(DEFAULT, 6, 'Declaração da Independência dos Estados Unidos','Legislação','1890-08-07','Ruim');
 
 SELECT * FROM livro;
 
@@ -79,6 +137,30 @@ SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento', integridade AS
 SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento' FROM livro WHERE integridade='Boa';
 SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento' FROM livro WHERE integridade='Média';
 SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento' FROM livro WHERE integridade='Ruim';
+
+-- Tabela Sensor -----------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE sensor (
+idSensor INT PRIMARY KEY AUTO_INCREMENT,
+fkSala INT NOT NULL,
+CONSTRAINT fkSensorSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
+);
+
+INSERT INTO sensor VALUES
+(DEFAULT,1),
+(DEFAULT,1),
+(DEFAULT,2),
+(DEFAULT,2),
+(DEFAULT,3),
+(DEFAULT,3),
+(DEFAULT,4),
+(DEFAULT,4),
+(DEFAULT,5),
+(DEFAULT,5),
+(DEFAULT,6),
+(DEFAULT,6);
+
+SELECT * FROM sensor;
 
 -- Tabela Registro ---------------------------------------------------------------------------------------------------------
 
@@ -118,84 +200,71 @@ INSERT INTO registro VALUES
 
 SELECT * FROM registro;
 
--- Tabela Empresa ---------------------------------------------------------------------------------------------------------
+-- JOINS -----------------------------------------------------------------------------------------------------------------------
 
-CREATE TABLE empresa(
-idEmpresa INT PRIMARY KEY AUTO_INCREMENT,
-cnpj CHAR(14) NOT NULL UNIQUE,
-nome VARCHAR(70) NOT NULL,
-responsavel VARCHAR(50) NOT NULL,
-cep CHAR(8) NOT NULL,
-numero VARCHAR(4) NOT NULL
-);
+SELECT s.nome AS 'Nome da Sala', m.temperaturaMax AS 'Temperatura Máxima Permitida', m.temperaturaMin AS 'Temperatura Miníma Permitida', 
+m.umidadeMax AS 'Umidade Máxima Permitida', m.umidadeMin AS 'Umidade Miníma Permitida' 
+FROM sala AS s JOIN metrica AS m ON s.fkMetrica = m.idMetrica;
 
-INSERT INTO empresa VALUES
-(DEFAULT,'63025530000104', 'Museu Ipiranga', 'Eduardo', '04207030', '100'),
-(DEFAULT,'10233223000233','Museu da Língua Portuguesa','Fátima','01120010','1130'),
-(DEFAULT,'33663683002917','Museu Nacional','Leandro','20940040','269');
+-- MUSEU IPIRANGA ---------------------------------------
 
-SELECT * FROM empresa;
+SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
+FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
+WHERE e.nome LIKE 'Museu Ipiranga';
 
--- Tabela Métrica ---------------------------------------------------------------------------------------------------------
+SELECT s.nome, se.idSensor, r.temperatura, r.umidade, e.nome 
+FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN registro AS r ON r.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
+WHERE e.nome LIKE 'Museu Ipiranga';
 
-CREATE TABLE metrica(
-idMetrica INT PRIMARY KEY AUTO_INCREMENT,
-temperaturaMax INT,
-temperaturaMin INT,
-umidadeMax INT,
-umidadeMin INT
-);
+SELECT 
+e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
+f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha', f.dataNascimento AS 'Data de Nascimento'
+FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+WHERE e.nome LIKE 'Museu Ipiranga';
 
-INSERT INTO metrica VALUES
-(DEFAULT,25,15,65,55);
+SELECT e.nome AS 'Nome da Empresa', f.nome AS 'Nome do Funcionário' 
+FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+WHERE e.nome LIKE 'Museu Ipiranga';
 
-SELECT * FROM metrica;
+-- MUSEU DA LÍNGUA PORTUGUESA ---------------------------------------
 
--- Tabela Sala ----------------------------------------------------------------------------------------------------------------------
+SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
+FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
+WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
-CREATE TABLE sala (
-idSala INT PRIMARY KEY AUTO_INCREMENT,
-nome VARCHAR(80) NOT NULL,
-descricao TEXT NOT NULL,
-fkEmpresa INT NOT NULL,
-fkMetrica INT NOT NULL,
-CONSTRAINT fkSalaEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
-CONSTRAINT fkSalaMetrica FOREIGN KEY (fkMetrica) REFERENCES metrica(idMetrica)
-);
+SELECT s.nome, se.idSensor, r.temperatura, r.umidade, e.nome 
+FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN registro AS r ON r.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
+WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
-INSERT INTO sala VALUES 
-(DEFAULT, 'Leis Brasileiras', 'Sala onde se armazena documentos de leis brasileiras',1,1),
-(DEFAULT,'Poemas Brasileiros','Sala onde se armazena importantes poemas brasileiros',1,1),
-(DEFAULT, 'Estados Unidos', 'Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías dos Estados Unidos',2,1),
-(DEFAULT,'Poemas internacionais','Sala onde se armazena importantes poemas internacionais',2,1),
-(DEFAULT,'Acontecimentos Brasileiros','Sala onde se armazena documentos narrando importantes acontecimentos do Brasil',3,1),
-(DEFAULT,'Inglaterra','Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías da Inglaterra',3,1);
+SELECT 
+e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
+f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha', f.dataNascimento AS 'Data de Nascimento'
+FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
-SELECT * FROM sala;
+SELECT e.nome AS 'Nome da Empresa', f.nome AS 'Nome do Funcionário' 
+FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
--- Tabela Sensor -----------------------------------------------------------------------------------------------------------------
+-- MUSEU NACIONAL ---------------------------------------
 
-CREATE TABLE sensor (
-idSensor INT PRIMARY KEY AUTO_INCREMENT,
-fkSala INT NOT NULL,
-CONSTRAINT fkSensorSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
-);
+SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
+FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
+WHERE e.nome LIKE 'Museu Nacional';
 
-INSERT INTO sensor VALUES
-(DEFAULT,1),
-(DEFAULT,1),
-(DEFAULT,2),
-(DEFAULT,2),
-(DEFAULT,3),
-(DEFAULT,3),
-(DEFAULT,4),
-(DEFAULT,4),
-(DEFAULT,5),
-(DEFAULT,5),
-(DEFAULT,6),
-(DEFAULT,6);
+SELECT s.nome, se.idSensor, r.temperatura, r.umidade, e.nome 
+FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN registro AS r ON r.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
+WHERE e.nome LIKE 'Museu Nacional';
 
-SELECT * FROM sensor;
+SELECT 
+e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
+f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha', f.dataNascimento AS 'Data de Nascimento'
+FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+WHERE e.nome LIKE 'Museu Nacional';
+
+SELECT e.nome AS 'Nome da Empresa', f.nome AS 'Nome do Funcionário' 
+FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+WHERE e.nome LIKE 'Museu Nacional';
 
 -- Testes ----------------------------------------------------------------------------------------------------------------------
 
@@ -211,7 +280,15 @@ DESCRIBE sensor;
 
 DROP DATABASE hdp;
 
--- ------------------------------------------------------------------------------------------------------------------------------
+-- Testes ---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 
@@ -223,29 +300,23 @@ DROP DATABASE hdp;
 
 -- Alguns comandos que podem ser necessários --------------------------------------------------------------------------------------------
 
--- SELECT nome AS 'Nome', email AS 'Email', senha AS 'Senha' FROM Funcionario;
--- SELECT nome AS 'Nome', cpf AS 'CPF', telefone AS 'Contato', dataNascimento AS 'Data de Nascimento';
--- UPDATE Funcionario SET nome = 'Carlos Roberto Arruda' WHERE idFuncionario = 3;
--- DELETE FROM Funcionario WHERE idFuncionario = 4;
--- SELECT * FROM Funcionario ORDER BY nome ASC;
+-- SELECT nome AS 'Nome', email AS 'Email', senha AS 'Senha' FROM funcionario;
+-- SELECT nome AS 'Nome', cpf AS 'CPF', telefone AS 'Contato', dataNascimento AS 'Data de Nascimento' FROM funcionario;
+-- UPDATE funcionario SET nome = 'Carlos Roberto Arruda' WHERE idFuncionario = 3;
+-- DELETE FROM funcionario WHERE idFuncionario = 4;
+-- SELECT * FROM funcionario ORDER BY nome ASC;
 
--- SELECT nome AS 'Título', dataPublicacao AS 'Data de Publicação', categoria AS 'Categoria' FROM Livro;
--- SELECT concat('O livro "', nome,'" está com a condição: ',integridade) AS 'Condição do livro' FROM Livro;
--- SELECT l.nome AS 'Nome do Livro e/ou Documento', s.nome AS 'Nome da Sala', s.descricao AS 'Descrição sobre a Sala' FROM Livro AS l INNER JOIN Sala AS s ON fkSala=idSala;
--- SELECT concat('O documento ',l.nome,', cujo a condição está ',l.integridade,', está localizado na sala: ',s.nome) AS "Localização de Livros" FROM Livro AS l INNER JOIN Sala AS s ON fkSala=idSala ORDER BY l.integridade DESC;
--- SELECT concat('O documento ',l.nome,', cujo a condição está ',l.integridade,', está localizado na sala: ',s.nome) AS "Localização de Livros" FROM Livro AS l INNER JOIN Sala AS s ON fkSala=idSala ORDER BY l.integridade;
--- UPDATE Livro SET integridade = 'Boa' WHERE idLivro = 4;
--- SELECT * FROM Livro ORDER BY dataPublicacao DESC;
+-- SELECT nome AS 'Título', dataPublicacao AS 'Data de Publicação', categoria AS 'Categoria' FROM livro;
+-- SELECT concat('O livro "', nome,'" está com a condição: ',integridade) AS 'Condição do livro' FROM livro;
+-- UPDATE livro SET integridade = 'Boa' WHERE idLivro = 4;
+-- SELECT * FROM livro ORDER BY dataPublicacao DESC;
 
--- SELECT concat('A temperatura: ', temperatura, 'Cº, e a umidade: ', umidade, '% foram registradas às ', date_format(dataHora, '%H:%i:%s do dia %d/%m/%y ')) AS 'Registros de temperatura e umidade' from Registro;
+-- SELECT nome AS 'Nome - Empresa', cnpj AS 'CNPJ - Empresa', responsavel AS 'Responsável - Empresa' FROM empresa;
+-- SELECT concat('O ',nome,', cujo CNPJ é ',cnpj,', está sobre cuidados do(a) senhor(a)',responsavel) AS 'Responsável da Empresa' FROM empresa;
+-- UPDATE empresa SET responsavel = 'Osmar' WHERE idEmpresa=1;
+-- ALTER TABLE empresa RENAME COLUMN responsavel TO gestor;
+-- SELECT * FROM empresa ORDER BY nome;
 
--- SELECT nome AS 'Nome - Empresa', cnpj AS 'CNPJ - Empresa', responsavel AS 'Responsável - Empresa' FROM Empresa;
--- SELECT concat('O ',nome,', cujo CNPJ é ',cnpj,', está sobre cuidados do(a) senhor(a)',responsavel) AS 'Responsável da Empresa' from Registro;
--- UPDATE Empresa SET responsavel = 'Osmar' WHERE idEmpresa=1;
--- ALTER TABLE Empresa RENAME COLUMN responsavel TO gestor;
--- SELECT * FROM Empresa ORDER BY nome;
+-- SELECT nome AS 'Nome', descricao AS 'Descrição' FROM sala WHERE nome = 'Poemas Brasileiros';
 
--- SELECT nome AS 'Nome', descricao AS 'Descrição' FROM Sala WHERE nome = 'Poemas Brasileiros';
-
--- ------------------------------------------------------------------------------------------------------------------------------
 -- ------------------------------------------------------------------------------------------------------------------------------
