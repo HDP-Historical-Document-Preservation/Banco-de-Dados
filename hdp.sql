@@ -166,37 +166,10 @@ SELECT * FROM sensor;
 
 CREATE TABLE registro (
 idRegistro INT PRIMARY KEY AUTO_INCREMENT,
-temperatura DOUBLE NOT NULL,
-umidade DOUBLE NOT NULL,
-fkSensor INT,
-CONSTRAINT fkRegistroSensor FOREIGN KEY (fkSensor) REFERENCES sensor(idSensor)
+temperatura float,
+umidade float
 );
 
-INSERT INTO registro VALUES
-(DEFAULT, '12', '47',1),
-(DEFAULT, '13', '45',1),
-(DEFAULT, '15', '20',2),
-(DEFAULT, '20', '60',2),
-(DEFAULT, '20', '61',3),
-(DEFAULT, '20', '62',3),
-(DEFAULT, '23', '59',4),
-(DEFAULT, '25', '58',4),
-(DEFAULT, '20', '60',5),
-(DEFAULT, '28', '50',5),
-(DEFAULT, '32', '80',6),
-(DEFAULT, '28', '77',6),
-(DEFAULT, '10', '45',7),
-(DEFAULT, '13', '42',7),
-(DEFAULT, '30', '20',8),
-(DEFAULT, '30', '60',8),
-(DEFAULT, '16', '63',9),
-(DEFAULT, '11', '52',9),
-(DEFAULT, '23', '60',10),
-(DEFAULT, '21', '80',10),
-(DEFAULT, '10', '60',11),
-(DEFAULT, '28', '58',11),
-(DEFAULT, '32', '70',12),
-(DEFAULT, '20', '57',12);
 
 SELECT * FROM registro;
 
