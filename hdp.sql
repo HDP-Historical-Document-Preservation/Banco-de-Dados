@@ -166,10 +166,9 @@ SELECT * FROM sensor;
 
 CREATE TABLE registro (
 idRegistro INT PRIMARY KEY AUTO_INCREMENT,
-temperatura float,
-umidade float
+umidade FLOAT,
+temperatura FLOAT
 );
-
 
 SELECT * FROM registro;
 
