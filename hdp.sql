@@ -162,6 +162,42 @@ INSERT INTO sensor VALUES
 
 SELECT * FROM sensor;
 
+-- Tabela RegSimulacao -----------------------------------------------------------------------------------------------------
+
+CREATE TABLE regSimulacao (
+idRegSimulacao INT PRIMARY KEY AUTO_INCREMENT,
+regTemperatura DOUBLE,
+regUmidade DOUBLE,
+fkSensor INT,
+CONSTRAINT fkregSimulacaoSensor FOREIGN KEY (fkSensor) REFERENCES sensor(idSensor)
+);
+
+INSERT INTO regSimulacao VALUES
+(DEFAULT, '12', '47',1),
+(DEFAULT, '13', '45',1),
+(DEFAULT, '15', '20',2),
+(DEFAULT, '20', '60',2),
+(DEFAULT, '20', '61',3),
+(DEFAULT, '20', '62',3),
+(DEFAULT, '23', '59',4),
+(DEFAULT, '25', '58',4),
+(DEFAULT, '20', '60',5),
+(DEFAULT, '28', '50',5),
+(DEFAULT, '32', '80',6),
+(DEFAULT, '28', '77',6),
+(DEFAULT, '10', '45',7),
+(DEFAULT, '13', '42',7),
+(DEFAULT, '30', '20',8),
+(DEFAULT, '30', '60',8),
+(DEFAULT, '16', '63',9),
+(DEFAULT, '11', '52',9),
+(DEFAULT, '23', '60',10),
+(DEFAULT, '21', '80',10),
+(DEFAULT, '10', '60',11),
+(DEFAULT, '28', '58',11),
+(DEFAULT, '32', '70',12),
+(DEFAULT, '20', '57',12);
+
 -- Tabela Registro ---------------------------------------------------------------------------------------------------------
 
 CREATE TABLE registro (
@@ -184,8 +220,8 @@ SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome 
 FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
 WHERE e.nome LIKE 'Museu Ipiranga';
 
-SELECT s.nome, se.idSensor, r.temperatura, r.umidade, e.nome 
-FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN registro AS r ON r.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
+SELECT s.nome, se.idSensor, rs.temperatura, rs.umidade, e.nome 
+FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN regSimulacao AS rs ON rs.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
 WHERE e.nome LIKE 'Museu Ipiranga';
 
 SELECT 
@@ -204,8 +240,8 @@ SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome 
 FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
 WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
-SELECT s.nome, se.idSensor, r.temperatura, r.umidade, e.nome 
-FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN registro AS r ON r.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
+SELECT s.nome, se.idSensor, rs.temperatura, rs.umidade, e.nome 
+FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN regSimulacao AS rs ON rs.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
 WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
 SELECT 
@@ -224,8 +260,8 @@ SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome 
 FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
 WHERE e.nome LIKE 'Museu Nacional';
 
-SELECT s.nome, se.idSensor, r.temperatura, r.umidade, e.nome 
-FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN registro AS r ON r.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
+SELECT s.nome, se.idSensor, rs.temperatura, rs.umidade, e.nome 
+FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN regSimulacao AS rs ON rs.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
 WHERE e.nome LIKE 'Museu Nacional';
 
 SELECT 
