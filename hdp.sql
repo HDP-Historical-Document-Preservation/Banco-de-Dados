@@ -105,7 +105,7 @@ CONSTRAINT pkLivroSala PRIMARY KEY (idLivro, fkSala),
 nome VARCHAR(70) NOT NULL,
 categoria VARCHAR(70) NOT NULL,
 dataPublicacao DATE,
-integridade VARCHAR(40) NOT NULL,
+integridade VARCHAR(5) NOT NULL,
 CONSTRAINT fkLivroSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
 );
 
