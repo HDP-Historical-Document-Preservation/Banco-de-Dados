@@ -26,9 +26,9 @@ numero VARCHAR(4) NOT NULL
 );
 
 INSERT INTO empresa VALUES
-(DEFAULT,'63025530000104', 'Museu Ipiranga', 'Eduardo', '04207030', '100'),
-(DEFAULT,'10233223000233','Museu da Língua Portuguesa','Fátima','01120010','1130'),
-(DEFAULT,'33663683002917','Museu Nacional','Leandro','20940040','269');
+(DEFAULT,'63925980050204', 'Museu Ipiranga', 'Eduardo', '04809237', '100'),
+(DEFAULT,'10132226000238','Museu da Língua Portuguesa','Fátima','00180050','1130'),
+(DEFAULT,'13668656002917','Museu Nacional','Leandro','27919840','269');
 
 SELECT * FROM empresa;
 
@@ -43,17 +43,16 @@ cpf CHAR(11) NOT NULL UNIQUE,
 telefone CHAR(11) NOT NULL,
 email VARCHAR(60) NOT NULL,
 senha VARCHAR(15) NOT NULL,
-dataNascimento DATE NOT NULL,
 CONSTRAINT fkFuncionarioEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
 );
 
 INSERT INTO funcionario VALUES
-(DEFAULT, 1, 'Eduardo da Silva Lima', '41381092268', '11935685087', 'edu.Silva@gmail.com', '042$16756', '1995-10-31'),
-(DEFAULT, 1, 'Fabíola Santos Monteiro', '14835098714', '11948286002', 'fabiola2456@hotmail.com', '04241829&','1991-12-25'),
-(DEFAULT, 2, 'Carlos Roberto Figueiredo', '03220101254', '11972785070', 'carlosfigueiredo@yahoo.com', '0424@9094', '1970-03-20'),
-(DEFAULT, 2, 'Alexandre Alves Reis', '24833018154', '11928282202', 'alexandre@hotmail.com', '022#18292','1993-02-15'),
-(DEFAULT, 3, 'Danilo Lopez Faria', '00260104251', '11942445040', 'danilo@yahoo.com', '0323&9394', '1984-04-10'),
-(DEFAULT, 3, 'Ana Bela Costa', '19311694234', '11963732481', 'ana.bela@outlook.com', '04241&678', '1963-04-15');
+(DEFAULT, 1, 'Eduardo da Silva Lima', '41381092268', '11935685087', 'edu.Silva@gmail.com', '042$16756'),
+(DEFAULT, 1, 'Fabíola Santos Monteiro', '14835098714', '11948286002', 'fabiola2456@hotmail.com', '04241829&'),
+(DEFAULT, 2, 'Carlos Roberto Figueiredo', '03220101254', '11972785070', 'carlosfigueiredo@yahoo.com', '0424@9094'),
+(DEFAULT, 2, 'Alexandre Alves Reis', '24833018154', '11928282202', 'alexandre@hotmail.com', '022#18292'),
+(DEFAULT, 3, 'Danilo Lopez Faria', '00260104251', '11942445040', 'danilo@yahoo.com', '0323&9394'),
+(DEFAULT, 3, 'Ana Bela Costa', '19311694234', '11963732481', 'ana.bela@outlook.com', '04241&678');
 
 SELECT * FROM funcionario;
 SELECT nome AS 'Nome do Funcionário', senha AS 'Senha do Funcionário' FROM funcionario;
