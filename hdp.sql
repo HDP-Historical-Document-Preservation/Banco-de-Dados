@@ -141,25 +141,25 @@ SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento' FROM livro WHER
 
 CREATE TABLE sensor (
 idSensor INT PRIMARY KEY AUTO_INCREMENT,
-fkSala INT NOT NULL,
-CONSTRAINT fkSensorSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
+nomeSensor VARCHAR(25)
 );
 
 INSERT INTO sensor VALUES
-(DEFAULT,1),
-(DEFAULT,1),
-(DEFAULT,2),
-(DEFAULT,2),
-(DEFAULT,3),
-(DEFAULT,3),
-(DEFAULT,4),
-(DEFAULT,4),
-(DEFAULT,5),
-(DEFAULT,5),
-(DEFAULT,6),
-(DEFAULT,6);
+(DEFAULT,'Sensor3', 0.5);
+
+ALTER TABLE sensor ADD COLUMN fator FLOAT;
 
 SELECT * FROM sensor;
+
+UPDATE sensor SET fator = 1 WHERE idSensor = 1;
+UPDATE sensor SET fator = 1.3 WHERE idSensor = 2;
+
+SELECT * FROM registro;
+
+SELECT r.umidade, r.temperatura, s.nomeSensor FROM registro AS r , sensor AS s; 
+CREATE VIEW teste AS (SELECT r.umidade, (r.temperatura * s.fator) AS temp, s.nomeSensor FROM registro AS r , sensor AS s); 
+
+SELECT * FROM teste WHERE nomeSensor = 'Sensor2';
 
 -- Tabela RegSimulacao -----------------------------------------------------------------------------------------------------
 
@@ -206,6 +206,18 @@ temperatura FLOAT
 );
 
 SELECT * FROM registro;
+
+INSERT INTO registro (umidade, temperatura) VALUES
+(60,20),
+(86,15),
+(70,22),
+(45,31),
+(67,20),
+(60,19),
+(60,20),
+(58,40),
+(78,23),
+(80,12);
 
 -- JOINS -----------------------------------------------------------------------------------------------------------------------
 
