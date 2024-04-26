@@ -140,62 +140,34 @@ SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento' FROM livro WHER
 -- Tabela Sensor -----------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE sensor (
-idSensor INT PRIMARY KEY AUTO_INCREMENT,
-nomeSensor VARCHAR(25)
+idSensor INT AUTO_INCREMENT,
+fkSala INT,
+CONSTRAINT pkSensorSala PRIMARY KEY (idSensor, fkSala),
+nome VARCHAR(25),
+fator FLOAT,
+CONSTRAINT fkSensorSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
 );
 
 INSERT INTO sensor VALUES
-(DEFAULT,'Sensor3', 0.5);
-
-ALTER TABLE sensor ADD COLUMN fator FLOAT;
+(DEFAULT, 1,'Sensor1', 0.5),
+(DEFAULT, 1,'Sensor2', 1),
+(DEFAULT, 2,'Sensor3', 1.5),
+(DEFAULT, 2,'Sensor4', 2),
+(DEFAULT, 3,'Sensor5', 0.2),
+(DEFAULT, 3,'Sensor6', 0.6),
+(DEFAULT, 4,'Sensor7', 0.3),
+(DEFAULT, 4,'Sensor8', 1.7),
+(DEFAULT, 5,'Sensor9', 1.3),
+(DEFAULT, 5,'Sensor10', 0.1),
+(DEFAULT, 6,'Sensor11', 2.4),
+(DEFAULT, 6,'Sensor12', 0.7);
 
 SELECT * FROM sensor;
 
-UPDATE sensor SET fator = 1 WHERE idSensor = 1;
-UPDATE sensor SET fator = 1.3 WHERE idSensor = 2;
-
-SELECT * FROM registro;
-
-SELECT r.umidade, r.temperatura, s.nomeSensor FROM registro AS r , sensor AS s; 
-CREATE VIEW teste AS (SELECT r.umidade, (r.temperatura * s.fator) AS temp, s.nomeSensor FROM registro AS r , sensor AS s); 
-
-SELECT * FROM teste WHERE nomeSensor = 'Sensor2';
-
--- Tabela RegSimulacao -----------------------------------------------------------------------------------------------------
-
-CREATE TABLE regSimulacao (
-idRegSimulacao INT PRIMARY KEY AUTO_INCREMENT,
-regTemperatura DOUBLE,
-regUmidade DOUBLE,
-fkSensor INT,
-CONSTRAINT fkregSimulacaoSensor FOREIGN KEY (fkSensor) REFERENCES sensor(idSensor)
-);
-
-INSERT INTO regSimulacao VALUES
-(DEFAULT, '12', '47',1),
-(DEFAULT, '13', '45',1),
-(DEFAULT, '15', '20',2),
-(DEFAULT, '20', '60',2),
-(DEFAULT, '20', '61',3),
-(DEFAULT, '20', '62',3),
-(DEFAULT, '23', '59',4),
-(DEFAULT, '25', '58',4),
-(DEFAULT, '20', '60',5),
-(DEFAULT, '28', '50',5),
-(DEFAULT, '32', '80',6),
-(DEFAULT, '28', '77',6),
-(DEFAULT, '10', '45',7),
-(DEFAULT, '13', '42',7),
-(DEFAULT, '30', '20',8),
-(DEFAULT, '30', '60',8),
-(DEFAULT, '16', '63',9),
-(DEFAULT, '11', '52',9),
-(DEFAULT, '23', '60',10),
-(DEFAULT, '21', '80',10),
-(DEFAULT, '10', '60',11),
-(DEFAULT, '28', '58',11),
-(DEFAULT, '32', '70',12),
-(DEFAULT, '20', '57',12);
+SELECT (r.umidade * s.fator) AS Umidade, (r.temperatura * s.fator) AS Temperatura, s.nome FROM registro AS r , sensor AS s;
+ 
+SELECT (r.umidade * s.fator) AS Umidade, (r.temperatura * s.fator) AS Temperatura, s.nome 
+FROM registro AS r , sensor AS s WHERE fkSala = 1; 
 
 -- Tabela Registro ---------------------------------------------------------------------------------------------------------
 
@@ -204,8 +176,6 @@ idRegistro INT PRIMARY KEY AUTO_INCREMENT,
 umidade FLOAT,
 temperatura FLOAT
 );
-
-SELECT * FROM registro;
 
 INSERT INTO registro (umidade, temperatura) VALUES
 (60,20),
@@ -219,6 +189,8 @@ INSERT INTO registro (umidade, temperatura) VALUES
 (78,23),
 (80,12);
 
+SELECT * FROM registro;
+
 -- JOINS -----------------------------------------------------------------------------------------------------------------------
 
 SELECT s.nome AS 'Nome da Sala', m.temperaturaMax AS 'Temperatura Máxima Permitida', m.temperaturaMin AS 'Temperatura Miníma Permitida', 
@@ -231,17 +203,13 @@ SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome 
 FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
 WHERE e.nome LIKE 'Museu Ipiranga';
 
-SELECT s.nome, se.idSensor, rs.temperatura, rs.umidade, e.nome 
-FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN regSimulacao AS rs ON rs.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
-WHERE e.nome LIKE 'Museu Ipiranga';
-
 SELECT 
 e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
-f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha', f.dataNascimento AS 'Data de Nascimento'
+f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
 FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
 WHERE e.nome LIKE 'Museu Ipiranga';
 
-SELECT e.nome AS 'Nome da Empresa', f.nome AS 'Nome do Funcionário' 
+SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
 FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
 WHERE e.nome LIKE 'Museu Ipiranga';
 
@@ -251,17 +219,13 @@ SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome 
 FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
 WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
-SELECT s.nome, se.idSensor, rs.temperatura, rs.umidade, e.nome 
-FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN regSimulacao AS rs ON rs.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
-WHERE e.nome LIKE 'Museu da Língua Portuguesa';
-
 SELECT 
 e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
-f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha', f.dataNascimento AS 'Data de Nascimento'
+f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
 FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
 WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
-SELECT e.nome AS 'Nome da Empresa', f.nome AS 'Nome do Funcionário' 
+SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
 FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
 WHERE e.nome LIKE 'Museu da Língua Portuguesa';
 
@@ -271,17 +235,13 @@ SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome 
 FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
 WHERE e.nome LIKE 'Museu Nacional';
 
-SELECT s.nome, se.idSensor, rs.temperatura, rs.umidade, e.nome 
-FROM sala AS s JOIN sensor AS se ON s.idSala = se.fkSala JOIN regSimulacao AS rs ON rs.fkSensor = se.idSensor JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa
-WHERE e.nome LIKE 'Museu Nacional';
-
 SELECT 
 e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
-f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha', f.dataNascimento AS 'Data de Nascimento'
+f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
 FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
 WHERE e.nome LIKE 'Museu Nacional';
 
-SELECT e.nome AS 'Nome da Empresa', f.nome AS 'Nome do Funcionário' 
+SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
 FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
 WHERE e.nome LIKE 'Museu Nacional';
 
