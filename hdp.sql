@@ -151,15 +151,15 @@ CONSTRAINT fkSensorSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
 INSERT INTO sensor VALUES
 (DEFAULT, 1,'Sensor1', 0.5),
 (DEFAULT, 1,'Sensor2', 1),
-(DEFAULT, 2,'Sensor3', 1.5),
-(DEFAULT, 2,'Sensor4', 2),
-(DEFAULT, 3,'Sensor5', 0.2),
+(DEFAULT, 2,'Sensor3', 0.6),
+(DEFAULT, 2,'Sensor4', 0.7),
+(DEFAULT, 3,'Sensor5', 0.4),
 (DEFAULT, 3,'Sensor6', 0.6),
-(DEFAULT, 4,'Sensor7', 0.3),
-(DEFAULT, 4,'Sensor8', 1.7),
-(DEFAULT, 5,'Sensor9', 1.3),
-(DEFAULT, 5,'Sensor10', 0.1),
-(DEFAULT, 6,'Sensor11', 2.4),
+(DEFAULT, 4,'Sensor7', 0.8),
+(DEFAULT, 4,'Sensor8', 1),
+(DEFAULT, 5,'Sensor9', 0.9),
+(DEFAULT, 5,'Sensor10', 1.2),
+(DEFAULT, 6,'Sensor11', 1),
 (DEFAULT, 6,'Sensor12', 0.7);
 
 SELECT * FROM sensor;
@@ -180,70 +180,25 @@ temperatura FLOAT
 INSERT INTO registro (umidade, temperatura) VALUES
 (60,20),
 (86,15),
-(70,22),
-(45,31),
-(67,20),
-(60,19),
-(60,20),
-(58,40),
-(78,23),
-(80,12);
+(70,22);
+
+-- Exemplo de como colocar data e hora atual automaticamente no banco
+
+-- CREATE TABLE TESTE ( 
+-- CPF VARCHAR (11),
+-- NOME VARCHAR (100),
+-- DATA_INICIO TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP );
+
+-- INSERT INTO TESTE (CPF, NOME) VALUES 
+-- ('47184041657', 'Rogério Gomes');
+
+-- SELECT * FROM TESTE;
 
 SELECT * FROM registro;
 
 -- JOINS -----------------------------------------------------------------------------------------------------------------------
 
-SELECT s.nome AS 'Nome da Sala', m.temperaturaMax AS 'Temperatura Máxima Permitida', m.temperaturaMin AS 'Temperatura Miníma Permitida', 
-m.umidadeMax AS 'Umidade Máxima Permitida', m.umidadeMin AS 'Umidade Miníma Permitida' 
-FROM sala AS s JOIN metrica AS m ON s.fkMetrica = m.idMetrica;
 
--- MUSEU IPIRANGA ---------------------------------------
-
-SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
-FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
-WHERE e.nome LIKE 'Museu Ipiranga';
-
-SELECT 
-e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
-f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
-FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
-WHERE e.nome LIKE 'Museu Ipiranga';
-
-SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
-FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
-WHERE e.nome LIKE 'Museu Ipiranga';
-
--- MUSEU DA LÍNGUA PORTUGUESA ---------------------------------------
-
-SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
-FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
-WHERE e.nome LIKE 'Museu da Língua Portuguesa';
-
-SELECT 
-e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
-f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
-FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
-WHERE e.nome LIKE 'Museu da Língua Portuguesa';
-
-SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
-FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
-WHERE e.nome LIKE 'Museu da Língua Portuguesa';
-
--- MUSEU NACIONAL ---------------------------------------
-
-SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
-FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
-WHERE e.nome LIKE 'Museu Nacional';
-
-SELECT 
-e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
-f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
-FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
-WHERE e.nome LIKE 'Museu Nacional';
-
-SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
-FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
-WHERE e.nome LIKE 'Museu Nacional';
 
 -- Testes ----------------------------------------------------------------------------------------------------------------------
 
@@ -278,6 +233,60 @@ DROP DATABASE hdp;
 
 
 -- Alguns comandos que podem ser necessários --------------------------------------------------------------------------------------------
+
+-- SELECT s.nome AS 'Nome da Sala', m.temperaturaMax AS 'Temperatura Máxima Permitida', m.temperaturaMin AS 'Temperatura Miníma Permitida', 
+-- m.umidadeMax AS 'Umidade Máxima Permitida', m.umidadeMin AS 'Umidade Miníma Permitida' 
+-- FROM sala AS s JOIN metrica AS m ON s.fkMetrica = m.idMetrica;
+
+-- MUSEU IPIRANGA ---------------------------------------
+
+-- SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
+-- FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu Ipiranga';
+
+-- SELECT 
+-- e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
+-- f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
+-- FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu Ipiranga';
+
+-- SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
+-- FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu Ipiranga';
+
+-- MUSEU DA LÍNGUA PORTUGUESA ---------------------------------------
+
+-- SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
+-- FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu da Língua Portuguesa';
+
+-- SELECT 
+-- e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
+-- f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
+-- FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu da Língua Portuguesa';
+
+-- SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
+-- FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu da Língua Portuguesa';
+
+-- MUSEU NACIONAL ---------------------------------------
+
+-- SELECT l.nome AS 'Nome do Documento', s.idSala AS 'ID da Sala', s.nome AS 'Nome da Sala', e.nome 
+-- FROM livro AS l JOIN sala AS s ON l.fkSala = s.idSala JOIN empresa AS e ON e.idEmpresa = s.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu Nacional';
+
+-- SELECT 
+-- e.nome AS 'NomeEmpresa', e.cnpj AS 'CNPJ', e.responsavel AS 'ResponsávelEmpresa', e.cep AS 'CEP', e.numero AS 'NúmeroEmpresa',
+-- f.nome AS 'NomeFuncionário', f.cpf AS 'CPF', f.telefone AS 'ContatoCelular', f.email AS 'E-mail', f.senha AS 'Senha'
+-- FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu Nacional';
+
+-- SELECT e.nome AS 'Nome da Empresa', e.idEmpresa AS 'Código da Empresa', f.nome AS 'Nome do Funcionário' 
+-- FROM empresa AS e JOIN funcionario AS f ON e.idEmpresa = f.fkEmpresa 
+-- WHERE e.nome LIKE 'Museu Nacional';
+
+-- --------------------------------------------------------------------------------------------------------------------------------------
 
 -- SELECT nome AS 'Nome', email AS 'Email', senha AS 'Senha' FROM funcionario;
 -- SELECT nome AS 'Nome', cpf AS 'CPF', telefone AS 'Contato', dataNascimento AS 'Data de Nascimento' FROM funcionario;
