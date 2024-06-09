@@ -11,6 +11,7 @@
 
 -- ----------------------------------------------------------------------------------------------------------------------------
 
+DROP DATABASE hdp;
 CREATE DATABASE hdp;
 USE hdp;
 
@@ -40,8 +41,8 @@ fkEmpresa INT,
 CONSTRAINT pkFuncionarioEmpresa PRIMARY KEY (idFuncionario, fkEmpresa),
 nome VARCHAR(80) NOT NULL,
 cpf CHAR(11) NOT NULL UNIQUE,
-telefone CHAR(11) NOT NULL,
-email VARCHAR(60) NOT NULL,
+telefone CHAR(11) NOT NULL UNIQUE,
+email VARCHAR(60) NOT NULL UNIQUE,
 senha VARCHAR(15) NOT NULL,
 CONSTRAINT fkFuncionarioEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
 );
@@ -61,10 +62,10 @@ SELECT nome AS 'Nome do Funcionário', senha AS 'Senha do Funcionário' FROM fun
 
 CREATE TABLE metrica(
 idMetrica INT PRIMARY KEY AUTO_INCREMENT,
-temperaturaMax INT,
-temperaturaMin INT,
-umidadeMax INT,
-umidadeMin INT
+temperaturaMax FLOAT NOT NULL,
+temperaturaMin FLOAT NOT NULL,
+umidadeMax FLOAT NOT NULL,
+umidadeMin FLOAT NOT NULL
 );
 
 INSERT INTO metrica VALUES
@@ -80,62 +81,28 @@ fkEmpresa INT,
 fkMetrica INT,
 CONSTRAINT pkSalaEmpresaMetrica PRIMARY KEY (idSala, fkEmpresa, fkMetrica),
 nome VARCHAR(80) NOT NULL,
-descricao TEXT NOT NULL,
 CONSTRAINT fkSalaEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
 CONSTRAINT fkSalaMetrica FOREIGN KEY (fkMetrica) REFERENCES metrica(idMetrica)
 );
 
 INSERT INTO sala VALUES 
-(DEFAULT, 1,1, 'Leis Brasileiras', 'Sala onde se armazena documentos de leis brasileiras'),
-(DEFAULT, 1,1, 'Poemas Brasileiros','Sala onde se armazena importantes poemas brasileiros'),
-(DEFAULT, 2,1, 'Estados Unidos', 'Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías dos Estados Unidos'),
-(DEFAULT, 2,1, 'Poemas internacionais','Sala onde se armazena importantes poemas internacionais'),
-(DEFAULT, 3,1, 'Acontecimentos Brasileiros','Sala onde se armazena documentos narrando importantes acontecimentos do Brasil'),
-(DEFAULT, 3,1, 'Inglaterra','Sala onde se armazena documentos de acontecimentos, pessoas ou histórias ficticías da Inglaterra');
+(DEFAULT, 1,1, 'Acontecimentos Misteriosos'),
+(DEFAULT, 1,1, 'Livros Religiosos'),
+(DEFAULT, 1,1, 'Leis Brasileiras'),
+(DEFAULT, 1,1, 'Estados Unidos'),
+(DEFAULT, 1,1, 'Inglaterra'),
+(DEFAULT, 2,1, 'Matemáticos'),
+(DEFAULT, 2,1, 'Mediterrâneo'),
+(DEFAULT, 2,1, 'Escravidão'),
+(DEFAULT, 2,1, 'Galeria dos Impressionistas'),
+(DEFAULT, 2,1, 'Sala dos Mestres Antigos'),
+(DEFAULT, 3,1, 'Religião e Mitos'),
+(DEFAULT, 3,1, 'Mergulho na História'),
+(DEFAULT, 3,1, 'Raízes da Nossa Terra'),
+(DEFAULT, 3,1, 'História Local'),
+(DEFAULT, 3,1, 'Biodiversidade Regional');
 
 SELECT * FROM sala;
-
--- Tabela Livro ---------------------------------------------------------------------------------------------------------
-
-CREATE TABLE livro (
-idLivro INT AUTO_INCREMENT,
-fkSala INT,
-CONSTRAINT pkLivroSala PRIMARY KEY (idLivro, fkSala),
-nome VARCHAR(70) NOT NULL,
-categoria VARCHAR(70) NOT NULL,
-dataPublicacao DATE,
-integridade VARCHAR(5) NOT NULL,
-CONSTRAINT fkLivroSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
-);
-
-INSERT INTO livro VALUES 
-(DEFAULT, 1, 'Carta de Pero Vaz de Caminha', 'Manuscrito','1500-05-01', 'Boa'),
-(DEFAULT, 2, 'Os Lusíadas','Poesia','1572-03-12','Média'),
-(DEFAULT, 3, 'Constituição Imperial Brasileira ','Legislação','1824-03-25','Ruim'),
-(DEFAULT, 4, 'Lei Áurea','Legislação','1888-05-13','Boa'),
-(DEFAULT, 5, 'Livro de Kells', 'Manuscrito','1615-10-13', 'Média'),
-(DEFAULT, 6, 'Magna Carta','Manuscrito','1450-07-01','Ruim'),
-(DEFAULT, 1, 'Diário de Anne Frank ','Manuscrito','1770-02-14','Boa'),
-(DEFAULT, 2, 'Poemas de Safo','Poesia','1102-09-21','Média'),
-(DEFAULT, 3, 'Manuscritos da Guerra de Canudos', 'Manuscrito','1289-03-19', 'Ruim'),
-(DEFAULT, 4, 'Manifesto da Comuna de Canudos','Manuscrito','1347-11-24','Boa'),
-(DEFAULT, 5, 'A Moreninha ','Manuscrito','1899-03-30','Média'),
-(DEFAULT, 6, 'Os Sertões ','Manuscrito','1205-03-09','Ruim'),
-(DEFAULT, 1, 'Diário de Anchieta', 'Manuscrito','1752-05-20', 'Boa'),
-(DEFAULT, 2, 'Proclamação da República','Legislação','1481-12-12','Média'),
-(DEFAULT, 3, 'Diário de Hans Staden','Manuscrito','1799-02-25','Ruim'),
-(DEFAULT, 4, 'Auto da Pregação do Frade Bartolomeu de Gusmão','Poesia','1544-10-23','Boa'),
-(DEFAULT, 5, 'Inuíto','Poesia','1745-07-11','Média'),
-(DEFAULT, 6, 'Declaração da Independência dos Estados Unidos','Legislação','1890-08-07','Ruim');
-
-SELECT * FROM livro;
-
-ALTER TABLE livro ADD CONSTRAINT chkIntegridade CHECK(integridade IN('Ruim', 'Média', 'Boa'));
-
-SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento', integridade AS 'Condição do Documento' FROM livro ORDER BY integridade;
-SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento' FROM livro WHERE integridade='Boa';
-SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento' FROM livro WHERE integridade='Média';
-SELECT idLivro AS 'ID do Documento', nome AS 'Nome do Documento' FROM livro WHERE integridade='Ruim';
 
 -- Tabela Sensor -----------------------------------------------------------------------------------------------------------------
 
@@ -143,28 +110,31 @@ CREATE TABLE sensor (
 idSensor INT AUTO_INCREMENT,
 fkSala INT,
 CONSTRAINT pkSensorSala PRIMARY KEY (idSensor, fkSala),
-nome VARCHAR(25),
-fator FLOAT,
+nome VARCHAR(25) NOT NULL,
+fator FLOAT NOT NULL,
 CONSTRAINT fkSensorSala FOREIGN KEY (fkSala) REFERENCES sala(idSala)
 );
 
 INSERT INTO sensor VALUES
-(DEFAULT, 1,'Sensor1', 0.5),
-(DEFAULT, 1,'Sensor2', 1),
-(DEFAULT, 2,'Sensor3', 0.6),
-(DEFAULT, 2,'Sensor4', 0.7),
-(DEFAULT, 3,'Sensor5', 0.4),
-(DEFAULT, 3,'Sensor6', 0.6),
-(DEFAULT, 4,'Sensor7', 0.8),
-(DEFAULT, 4,'Sensor8', 1),
-(DEFAULT, 5,'Sensor9', 0.9),
-(DEFAULT, 5,'Sensor10', 1.2),
-(DEFAULT, 6,'Sensor11', 1),
-(DEFAULT, 6,'Sensor12', 0.7);
+(DEFAULT, 1, 'Sensor1', 0.5),
+(DEFAULT, 2, 'Sensor1', 1),
+(DEFAULT, 3, 'Sensor1', 1.2),
+(DEFAULT, 4, 'Sensor1', 0.7),
+(DEFAULT, 5, 'Sensor1', 0.4),
+(DEFAULT, 6, 'Sensor1', 0.6),
+(DEFAULT, 7, 'Sensor1', 0.8),
+(DEFAULT, 8, 'Sensor1', 1),
+(DEFAULT, 9, 'Sensor1', 0.9),
+(DEFAULT, 10, 'Sensor1', 1.2),
+(DEFAULT, 11, 'Sensor1', 1),
+(DEFAULT, 12, 'Sensor1', 0.7),
+(DEFAULT, 13, 'Sensor1', 0.5),
+(DEFAULT, 14, 'Sensor1', 1),
+(DEFAULT, 15, 'Sensor1', 0.6);
 
 SELECT * FROM sensor;
 
-SELECT (r.umidade * s.fator) AS Umidade, (r.temperatura * s.fator) AS Temperatura, s.nome FROM registro AS r , sensor AS s;
+SELECT ROUND(r.umidade * s.fator) AS Umidade, ROUND(r.temperatura * s.fator) AS Temperatura, s.nome FROM registro AS r , sensor AS s;
  
 SELECT (r.umidade * s.fator) AS Umidade, (r.temperatura * s.fator) AS Temperatura, s.nome 
 FROM registro AS r , sensor AS s WHERE fkSala = 1; 
@@ -174,32 +144,137 @@ FROM registro AS r , sensor AS s WHERE fkSala = 1;
 CREATE TABLE registro (
 idRegistro INT PRIMARY KEY AUTO_INCREMENT,
 umidade FLOAT,
-temperatura FLOAT
+temperatura FLOAT,
+diaHora TIME,
+fkSensor INT,
+CONSTRAINT registroSensor FOREIGN KEY (fkSensor) REFERENCES sensor(idSensor)
 );
 
-INSERT INTO registro (umidade, temperatura) VALUES
-(60,20),
-(86,15),
-(70,22);
-
--- Exemplo de como colocar data e hora atual automaticamente no banco
-
--- CREATE TABLE TESTE ( 
--- CPF VARCHAR (11),
--- NOME VARCHAR (100),
--- DATA_INICIO TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP );
-
--- INSERT INTO TESTE (CPF, NOME) VALUES 
--- ('47184041657', 'Rogério Gomes');
-
--- SELECT * FROM TESTE;
+INSERT INTO registro (umidade, temperatura, diaHora, fkSensor) VALUES
+(60, 20, NOW(), 1),
+(60, 20, NOW(), 2),
+(60, 20, NOW(), 3),
+(60, 20, NOW(), 4),
+(60, 20, NOW(), 5),
+(60, 20, NOW(), 6),
+(60, 20, NOW(), 7),
+(60, 20, NOW(), 8),
+(60, 20, NOW(), 9),
+(60, 20, NOW(), 10),
+(60, 20, NOW(), 11),
+(60, 20, NOW(), 12),
+(60, 20, NOW(), 13),
+(60, 20, NOW(), 14),
+(60, 20, NOW(), 15),
+(86, 15, NOW(), 1),
+(86, 15, NOW(), 2),
+(86, 15, NOW(), 3),
+(86, 15, NOW(), 4),
+(86, 15, NOW(), 5),
+(86, 15, NOW(), 6),
+(86, 15, NOW(), 7),
+(86, 15, NOW(), 8),
+(86, 15, NOW(), 9),
+(86, 15, NOW(), 10),
+(86, 15, NOW(), 11),
+(86, 15, NOW(), 12),
+(86, 15, NOW(), 13),
+(86, 15, NOW(), 14),
+(86, 15, NOW(), 15),
+(70, 22, NOW(), 1),
+(70, 22, NOW(), 2),
+(70, 22, NOW(), 3),
+(70, 22, NOW(), 4),
+(70, 22, NOW(), 5),
+(70, 22, NOW(), 6),
+(70, 22, NOW(), 7),
+(70, 22, NOW(), 8),
+(70, 22, NOW(), 9),
+(70, 22, NOW(), 10),
+(70, 22, NOW(), 11),
+(70, 22, NOW(), 12),
+(70, 22, NOW(), 13),
+(70, 22, NOW(), 14),
+(70, 22, NOW(), 15),
+(61, 21, NOW(), 1),
+(61, 21, NOW(), 2),
+(61, 21, NOW(), 3),
+(61, 21, NOW(), 4),
+(61, 21, NOW(), 5),
+(61, 21, NOW(), 6),
+(61, 21, NOW(), 7),
+(61, 21, NOW(), 8),
+(61, 21, NOW(), 9),
+(61, 21, NOW(), 10),
+(61, 21, NOW(), 11),
+(61, 21, NOW(), 12),
+(61, 21, NOW(), 13),
+(61, 21, NOW(), 14),
+(61, 21, NOW(), 15);
 
 SELECT * FROM registro;
 
--- JOINS -----------------------------------------------------------------------------------------------------------------------
+SELECT ROUND(r.umidade * s.fator) AS Umidade, ROUND(r.temperatura * s.fator) AS Temperatura, s.nome FROM registro AS r , sensor AS s;
 
+-- SELECTS ----------------------------------------------------------------------------------------------------------------
 
+-- QUANTIDADE DE SALAS FORA DO IDEAL ------------------------------------------------------
 
+SELECT COUNT(s.idSala) AS salas FROM sala AS s JOIN Empresa ON empresa.idEmpresa = s.fkEmpresa WHERE s.fkEmpresa = ${fkEmpresa};
+
+-- QUANTIDADE DE SALAS FORA DO IDEAL ------------------------------------------------------
+
+SELECT COUNT(DISTINCT sa.idSala) AS 'qtdSalasFora'
+FROM sala AS sa
+JOIN sensor AS s ON sa.idSala = s.fkSala
+JOIN (
+  SELECT r.fkSensor, r.umidade, r.temperatura, r.diaHora, r.idRegistro
+  FROM registro AS r
+  JOIN (
+    SELECT fkSensor, MAX(diaHora) AS max_diaHora
+    FROM registro
+    GROUP BY fkSensor ORDER BY max_diaHora DESC
+  ) AS lr ON r.fkSensor = lr.fkSensor AND r.diaHora = lr.max_diaHora
+) AS r ON s.idSensor = r.fkSensor
+JOIN empresa AS e ON e.idEmpresa = sa.fkEmpresa
+WHERE e.idEmpresa = ${fkEmpresa}
+  AND (ROUND(r.umidade * s.fator) >= 65 
+       OR ROUND(r.umidade * s.fator) <= 55 
+       OR ROUND(r.temperatura * s.fator) >= 25 
+       OR ROUND(r.temperatura * s.fator) <= 15);
+       
+-- GRÁFICO 1 -------------------------------------------------------------------
+  
+SELECT 
+  s.idSensor,
+  sa.nome AS nome_sala,
+  ROUND(r.umidade * s.fator) AS umidade_ajustada,
+  ROUND(r.temperatura * s.fator) AS temperatura_ajustada,
+  r.diaHora AS hora_insercao
+FROM sala AS sa
+JOIN sensor AS s ON sa.idSala = s.fkSala
+JOIN registro AS r ON r.fkSensor = s.idSensor
+JOIN empresa AS e ON e.idEmpresa = sa.fkEmpresa
+WHERE e.idEmpresa = ${fkEmpresa}
+  AND s.idSensor = ${idSensor}
+ ORDER BY hora_insercao DESC LIMIT 7;
+  
+  -- GRÁFICO 2 ------------------------------------------------------------------------
+  
+  SELECT 
+  s.idSensor,
+  sa.nome AS nome_sala,
+  ROUND(r.umidade * s.fator) AS umidade_ajustada,
+  ROUND(r.temperatura * s.fator) AS temperatura_ajustada,
+  r.diaHora AS hora_insercao
+FROM sala AS sa
+JOIN sensor AS s ON sa.idSala = s.fkSala
+JOIN registro AS r ON r.fkSensor = s.idSensor
+JOIN empresa AS e ON e.idEmpresa = sa.fkEmpresa
+WHERE e.idEmpresa = ${fkEmpresa}
+  AND s.idSensor = ${idSensor}
+ ORDER BY hora_insercao DESC LIMIT 24;
+ 
 -- Testes ----------------------------------------------------------------------------------------------------------------------
 
 SHOW TABLES;
